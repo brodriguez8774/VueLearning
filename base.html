@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="{{ config('app.locale') }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://unpkg.com/vue"></script>
+
+  <title>Vue Learning</title>
+
+  <link rel="stylesheet" href="./base.css"></link>
+</head>
+
+
+<body>
+  <h1>Vue Index</h1>
+
+  <div id="root" class="container">
+
+    <tabs>
+
+
+      <tab name="Binding Values" :selected=true>
+        <h2>Message Input</h2>
+        <p>This tab gets dynamically takes input from box and manipulates other elements accordingly.</p>
+        <input type="text" id="input" v-model="message">
+        <p>The value of input is <span>{{ message }}</span>.</p>
+        <hr>
+
+        <h2>Adding to List</h2>
+        <p>This tab takes input from box (after button click) and dynamically adds to list.</p>
+        <input type="text" v-model="newName">
+        <button v-on:click="addName" v-bind:title="title">Add Name</button>
+
+        <ul>
+          <li v-for="name in names" v-text="name"></li>
+        </ul>
+      </tab>
+
+
+      <tab name="Computing Values">
+        <p>This tab doesn't do anything dynamic, but is an example of using Vue's "computed" helper.</p>
+        <p>It reads from the values of a list and acts accordingly, on page load.</p>
+        <hr>
+        <p>As stated in the notes section, Computed is for manipulating data when a state change is not present.</p>
+        <p>IE: this task filter is appropriate because it's processed and rendered on page load.</p>
+        <h2>All Tasks</h2>
+        <ul>
+          <li v-for="task in tasks" v-text="task.description"></li>
+        </ul>
+        <h2>Incomplete Tasks</h2>
+        <ul>
+          <li v-for="task in incompleteTasks" v-text="task.description"></li>
+        </ul>
+      </tab>
+
+
+      <tab name="Vue Syntax">
+        <input type="text" v-model="methodName">
+        <input type="text" v-model="propertyName">
+        <input type="text" v-model="dataName">
+        <h2>Basic Syntax</h2>
+        <p>
+          <span>v-on:click="{{ methodName }}"</span> is equivalent to <span>@click="{{ methodName }}"</span>. <br>
+          This triggers the given <span>{{ methodName }}</span> on element click.
+        </p>
+        <hr>
+
+        <p>
+          <span>v-bind:{{ propertyName }}="{{ dataName }}"</span> is equivalent to <span>:{{ propertyName }}="{{ dataName }}"</span>. <br>
+          This binds the given vue data element of <span>{{ dataName }}</span> to the element property of <span>{{ propertyName }}</span>.
+        </p>
+        <hr>
+        <p>
+          <span>v-text="{{ dataName }}"</span> is equavalent to <span>{ {{ dataName }} }</span>. They both essentialy take a given Vue dataset of dataName and dynamically populate the page accordingly.
+        </p>
+        <p>
+          Note: So that vue doesn't try to read the syntax, only one curly brace has been used on this page. The standard syntax is to use double, IE <span>{{</span>
+        </p>
+        <hr>
+        <p>
+          <span>v-model="{{ dataName }}"</span> will dynamically bind the given vue data of {{ dataName }} to the element it is defined within. According to documentation, it will also "pick the correct way to update the element based on input type."
+        </p>
+        <hr>
+        <h2>Interaction with Laravel</h2>
+        <p>
+          Because both Vue and Laravel's Blade Template use the <span>{ }</span> tags, the one that handles server-side gets priority. That means that any time you attempt to use this markup for Vue, Laravel sees it first and throws an error.
+        </p>
+        <p>
+          To fix this, either preface the markup with the @ symbol (such as <span>@{ variableHere }</span>) or instead use the <span>v-text</span> markup.
+        </p>
+      </tab>
+
+
+      <tab name="Vue Components">
+
+        <h2>Reason for using Components</h2>
+        <p>
+          Custom Vue Components only seem to be useful if you have repeating html structures that would otherwise be annoying/tedious to manually define. But even then, standard html templating is probably a better option, as it will work regardless of potential issues with any given client's javascript (turned off and/or outdated for whatever reason).
+        </p>
+        <p>
+          The only instance where this might be useful is if you have html that could be structured into a template, but specifically do not want to put said data into a database. Such as how this page is set up.
+        </p>
+        <hr>
+
+        <h2>Options Used on this Page</h2>
+        <p>
+          <span>el:</span> - Gets the html ID in which the Vue instance will live. This is so that you can create different Vue instances, and scope each only to a desired section of page.
+        </p>
+        <hr>
+
+        <p>
+          <span>template:</span> - This is only used within custom components. Here, you define the standard html setup of said components. Note that the outermost html must be a single element within a template. Hence the otherwise useless outer div in the "tabs" component of this page.
+        </p>
+        <hr>
+
+        <p>
+          <span>Data() {}</span> - A data object that dynamicaly updates all instances upon being changed. This seems to be the main means by which Vue dynamically changes information on the page.
+        </p>
+        <hr>
+
+        <p>
+          <span>methods: {}</span> - A filter where you define all your user-created methods to manipulate Vue instances. Very helpful for editing your data after page load, for example. Generally is used primarily for triggering state alterations.
+        </p>
+        <hr>
+
+        <p>
+          <span>props: {}</span> - A filter where you explicitly define the properties you set for custom elements. They must be explicitly defined here or else the element will not accept it.
+        </p>
+        <hr>
+
+        <p>
+          <span>created() {}</span> - A hook which activates upon the Vue element being instanced on the page. Appears to be good for debugging if you can't get something to initialize. Or possibly for functions that run only once on page load/set up.
+        </p>
+        <hr>
+
+        <p>
+          <span>mounted() {}</span> - A hook that is very similar to created. The only difference appears to be that it's called when the given Vue instance is actually mounted onto the appropriate page elements. Meanwhile, created appears to be called before replacing page elements, but after the Vue instance is created.
+        </p>
+        <hr>
+
+        <p>
+        <span>computed: {}</span> - A filter where you define and transform data. Similar to the <span>methods</span> filter, except that this doesn't tend to involve state transformations. <br>
+          IE: It would be more appropriate to calculate hrefs from a tab name here than it would be to do so in methods. As this is not a state change, but still data that needs to be calculated.
+        </p>
+
+      </tab>
+
+
+      <tab name="Events and Listeners">
+        <input type="text" id="eventName" v-model="eventName">
+        <p>From within the <span>methods</span> filter...</p>
+        <hr>
+        <p>
+          <span>this.$emit("{{ eventName }}")</span> - Emits an event of eventName
+        </p>
+        <hr>
+
+        <p>
+          <span>this.$on("{{ eventName }}", function() {})</span> - Listens for an event of eventName and responds accordingly.
+        </p>
+        <hr>
+
+        <h2>Emitting and Listening Universally</h2>
+        <p>First, at the top of your script file, create a Vue of <span>window.Event = new Vue();</span></p>
+        <p>Then you can call Event.$emit or Event.$on to create/access global events from within any component.</p>
+
+      </tab>
+
+
+      <tab name="Ajax Requests">
+        <p>
+          Vue doesn't appear to explicitly support JSON requests out of the box, so you'll want to instead use JQuery functions such as <span>$.getJson()</span>.
+        </p>
+        <hr>
+        <p>
+          To get data as JSON, specify a <span>get</span> route and simply have it return an array. By default, Laravel will automatically convert this into a JSON.
+        </p>
+        <hr>
+        <p>
+          To send data as JSON, format properly and send to desired <span>post</span> route.
+        </p>
+      </tab>
+
+
+      <tab name="Vue Testing">
+        <p>
+          I don't believe PHPUnit is a very good means to test JavaScript specific code (although admittedly, I haven't tried yet, so I may be wrong on this).
+        </p>
+        <p>
+          Of course, you can simply use a browser-based testing framework, such as laravel's dusk.
+          However, dusk isn't exactly the fastest, and if your site is large, it may become encumbersome to run the tests every time you change code, due to how long it may take to run.
+        </p>
+        <p>
+          An alternative is to use a testing framework that is spcifically made for testing JavaScript. <a href="https://laracasts.com/series/learn-vue-2-step-by-step/episodes/30">This video series</a> seems to recomend using <a href="https://github.com/avajs/ava">the Ava test framework</a> which seems to have been made for npm, which you're going to have anyways if you're working with Vue.
+        </p>
+      </tab>
+
+
+    </tabs>
+
+    <p>
+      For more detail on anything regarding the <a href="https://vuejs.org/">VueJs</a> language, reference <a href="https://laracasts.com/series/learn-vue-2-step-by-step">this video series</a> and/or the <a href="https://vuejs.org/v2/guide/">Vue Docs</a>.
+    </p>
+  </div>
+  <script src="./base.js"></script>
+
+</body>
+
+</html>
